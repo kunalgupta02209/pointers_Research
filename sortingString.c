@@ -3,9 +3,7 @@
 #include<string.h>
 int comparator(const void *p,const void *q)
 {
-    char *str1 = *(char *)p;
-    char *str2 = *(char *)q;
-    return strcmp(str1,str2);
+    return strcmp(*((char  **)p),*((char  **)q));
 }
 //It sorts the the string pointer array but the last element is junk value (still) in the individual pointer array
 //and no segmentation fault as it was expected earlier
@@ -13,22 +11,19 @@ int comparator(const void *p,const void *q)
 
 char** input(int *num)
 {
+    int n;
     printf("Enter number of strings\n");
-    scanf("%d",num);
+    scanf("%d",&n);
+    *num=n;
     char **a;
-    a= (char **)malloc(*num*sizeof(char *));
-    char *str;
-    for(int i=0;i<*num;i++)
+    a= (char **)malloc(n*sizeof(char *));
+    char s[1000] = "";
+    for(int i=0;i<n;i++)
     {
-        char s[1000] = "";
         printf("Enter the %d string\n",i+1);
         scanf("%s",s);
-        str=malloc(sizeof(s));
-        for(int j=0;s[j] !='\0';j++)
-           {
-               *(str+j)= s[j];
-           }
-        a[i]=str;
+        a[i]=malloc(sizeof(s)+1);
+        strcpy(a[i],s)
     }
     return a;
 }
@@ -36,15 +31,14 @@ char** input(int *num)
 void output(char **a, int *num)
 {
     for(int i=0;i<*num;i++)
-        printf("%s\n",*(a+i));
+        printf("%s\n",a[i]);
 }
 
 int main()
 {
-    int *num;
-    num = (int*)malloc(sizeof(int*));
-    char **a = input(num);
-    qsort((void *)a, *num, sizeof(a[0]), comparator);
+    int num;
+    char **a = input(&num);
+    qsort((void *)a, num, sizeof(a[0]), comparator);
     output(a, num);
     return 0;
 }
