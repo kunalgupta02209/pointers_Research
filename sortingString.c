@@ -3,12 +3,13 @@
 #include<string.h>
 int comparator(const void *p,const void *q)
 {
-    char *str1 = *(int *)p;
-    char *str2 = *(int *)q;
+    char *str1 = *(char *)p;
+    char *str2 = *(char *)q;
     return strcmp(str1,str2);
 }
-//It sorts the the string pointer array but the last element is junk value in the individual pointer array
-//another new commit with a (char cast) will give segmentation fault
+//It sorts the the string pointer array but the last element is junk value (still) in the individual pointer array
+//and no segmentation fault as it was expected earlier
+//the segmentation fault was because of some other malloc issue that is fixed in this code
 
 char** input(int *num)
 {
