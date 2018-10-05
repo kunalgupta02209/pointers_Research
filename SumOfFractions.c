@@ -6,35 +6,40 @@ struct fraction
   int num, den;
 };
 
-void input_fractions(int *n, struct fraction fraclist[1000]);
-void output_fraclist(struct fraction fraclist[1000], int n);
+struct fractions
+{
+  int n;
+  struct fraction fracs[1000];
+};
+
+struct fractions input_fractions(struct fractions frac_list);
+void output_fraclist(struct fractions frac_list);
 void output_fraction(struct fraction Frac);
 struct fraction sum_2(struct fraction frac1, struct fraction frac2);
-struct fraction sum_list(struct fraction fraclist[1000], int n);
+struct fraction sum_list(struct fractions frac_list);
 int gcd(int a, int b);
 struct fraction reduce(struct fraction frac);
 
 
 
 
-void input_fractions(int *n, struct fraction fraclist[1000])
+struct fractions input_fractions(struct fractions frac_list)
 {
-  int nu;
   printf("Enter no. of fractions\n");
-  scanf("%d", &nu);
-  *n = nu;
+  scanf("%d", &frac_list.n);
   //struct fraction fraclist[nu];
-  for(int i = 0; i < nu; i++)
+  for(int i = 0; i < frac_list.n; i++)
   {
     printf("Input the fraction sepertating the numerator and denominator by '/'\n");
-    scanf("%d/%d", &fraclist[i].num, &fraclist[i].den);
+    scanf("%d/%d", &frac_list.fracs[i].num, &frac_list.fracs[i].den);
   }
+  return frac_list;
 }
 
-void output_fraclist(struct fraction fraclist[1000], int n)
+void output_fraclist(struct fractions frac_list)
 {
-  for(int i = 0; i< n; i++)
-    output_fraction(fraclist[i]);
+  for(int i = 0; i< frac_list.n; i++)
+  output_fraction(frac_list.fracs[i]);
 }
 
 void output_fraction(struct fraction Frac)
@@ -53,22 +58,24 @@ struct fraction sum_2(struct fraction frac1, struct fraction frac2)
   return frac;
 }
 
-struct fraction sum_list(struct fraction fraclist[1000], int n)
+struct fraction sum_list(struct fractions frac_list)
 {
   int i = 0;
   struct fraction frac;
-  while( i < n)
+  while( i < frac_list.n)
   {
-            if(i == 0)
-            {
-                frac = sum_2(fraclist[i], fraclist[i+1]);
-                i += 2;
-            }
-            else
-            {
-              frac = sum_2(frac, fraclist[i]);
-              i += 1;
-            }
+    if(i == 0)
+    {
+      frac = sum_2(frac_list.fracs[i], frac_list.fracs[i+1]);
+      //output_fraction(frac);
+      i += 2;
+    }
+    else
+    {
+      frac = sum_2(frac, frac_list.fracs[i]);
+      //output_fraction(frac);
+      i += 1;
+    }
 
   }
   return frac;
@@ -76,32 +83,31 @@ struct fraction sum_list(struct fraction fraclist[1000], int n)
 
 int gcd(int a, int b)
 {
-    if (b == 0)
-        return a;
-    return gcd(b, a % b);
+  if (b == 0)
+  return a;
+  return gcd(b, a % b);
 }
 
 struct fraction reduce(struct fraction frac)
 {
-	while(1)
-	{
+  while(1)
+  {
     int nu = frac.num;
     int de = frac.den;
     int n = gcd(frac.num, frac.den);
     frac.num = frac.num/n;
     frac.den = frac.den/n;
     if(frac.num == nu)
-      break;
+    break;
   }
   return frac;
 }
 int main()
 {
-  int n = 0;
-  struct fraction frac_list[1000];
-  input_fractions(&n, frac_list);
-  struct fraction frac = sum_list(frac_list, n);
+  struct fractions frac_list;
+  frac_list = input_fractions(frac_list);
+  struct fraction frac = sum_list(frac_list);
   frac = reduce(frac);
   output_fraction(frac);
-  //output_fraclist(frac_list, n);
+  //output_fraclist(frac_list);
 }
