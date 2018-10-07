@@ -43,46 +43,46 @@ void insertKey(sll_node *first, int item, int key)
 	cur = first;
 	temp->data = item;
 	temp->link = NULL;
-	if(first == NULL)
-		return;
-	while(1)
+	if(first != NULL && first->data == key)
 	{
-		if(cur == NULL)
-		{
-			printf("Key not present in the list\n");
-			break;
-		}
-		else if(cur-> data != key)
-			cur = cur->link;
-		else
-		{
-			temp->link = cur->link;
-			cur->link = temp;
-			break;
-		}
+		temp->link = cur->link;
+		cur->link = temp;
+		return;
 	}
+	while(cur != NULL && cur->data != key)
+		cur = cur->link;
+	if(cur == NULL)
+	{
+		printf("Key not present in the list\n");
+		return;
+	}
+	temp->link = cur->link;
+	cur->link = temp;
 }
 
 void delete(sll_node **first, int key)
 {
-	sll_node *prev, *temp;
-	temp = *first;
+	sll_node *prev, *cur;
+	cur = *first;
 	printf("%d\n", (*first)->data);
 	if(*first != NULL && (*first)->data == key)
 	{
 		*first = (*first)->link;
-		free(temp);
+		free(cur);
 		return;
 	}
-	while (temp != NULL && temp->data != key)
+	while (cur != NULL && cur->data != key)
     {
-        prev = temp;
-        temp = temp->link;
+        prev = cur;
+        cur = cur->link;
     }
-    if(temp == NULL)
-    	printf("link not present in node");
-    prev->link = temp->link;
-    free(temp);
+    if(cur == NULL)
+    {
+    	printf("Key not present in list\n");
+    	return;
+    }
+    prev->link = cur->link;
+    free(cur);
 }
 
 void display(sll_node* first)
@@ -94,7 +94,7 @@ void display(sll_node* first)
 	{
     	while(cur != NULL)
     	{
-    		printf("link: %p\t data: %d\n", cur->link, cur->data);
+    		printf("data: %d\t link: %p\n", cur->data, cur->link);
     		cur = cur->link;
     		//printf("link: %p\t data: %d\n", cur->link, cur->data);
     	}
@@ -131,7 +131,7 @@ int main()
 		{
 			case 1:
 				insertLeft(&first, insertItem());
-				printf("*first = %p ", first);
+				//printf("*first = %p ", first);
 				break;
 			case 2:
 				printf("Enter key after which to insert\n");
