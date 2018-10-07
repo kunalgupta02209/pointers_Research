@@ -43,12 +43,6 @@ void insertKey(sll_node *first, int item, int key)
 	cur = first;
 	temp->data = item;
 	temp->link = NULL;
-	if(first != NULL && first->data == key)
-	{
-		temp->link = cur->link;
-		cur->link = temp;
-		return;
-	}
 	while(cur != NULL && cur->data != key)
 		cur = cur->link;
 	if(cur == NULL)
