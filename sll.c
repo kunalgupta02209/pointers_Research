@@ -6,21 +6,21 @@ typedef struct node
 	int data;
 }sll_node;
 
-sll_node* insertLeft(sll_node *first, int item)
+void insertLeft(sll_node **first, int item)
 {
-	sll_node *temp = (sll_node *)malloc(sizeof(sll_node*));
+	sll_node *temp = (sll_node *)malloc(sizeof(sll_node));
+	//printf("*first = %p\n", first);
 	temp->data = item;
 	temp->link = NULL;
 	if(first == NULL)
-		first = temp;
+		*first = temp;
 	else
 	{
-		temp->link = first;
-		first = temp;
+		temp->link = *first;
+		*first = temp;
 	}
-	//printf("*first = %p , %d, %p\n", first, first->data, first->link);
+	//printf("*first = %p , %d, %p\n", first, (*first)->data, (*1first)->link);
 	//printf("*temp = %p , %d, %p\n", temp, temp->data, temp->link);
-	return first;
 }
 
 void insertEnd(sll_node *first, int item)
@@ -33,7 +33,7 @@ void insertEnd(sll_node *first, int item)
 	while(cur->link != NULL)
 		cur = cur->link;
 	cur->link = temp;
-	//printf("*first = %p , %d, %p", first, first->data, first->link);
+	//printf("*first = %p , %d, %p", cur, cur->data, cur->link);
 }
 
 void insertKey(sll_node *first, int item, int key)
@@ -47,7 +47,7 @@ void insertKey(sll_node *first, int item, int key)
 		return;
 	while(1)
 	{
-		if(cur->link == NULL)
+		if(cur == NULL)
 		{
 			printf("Key not present in the list\n");
 			break;
@@ -63,15 +63,42 @@ void insertKey(sll_node *first, int item, int key)
 	}
 }
 
-void display(sll_node *first)
+void delete(sll_node **first, int key)
 {
-	sll_node *cur = first;
+	sll_node *prev, *temp;
+	temp = *first;
+	printf("%d\n", (*first)->data);
+	if(*first != NULL && (*first)->data == key)
+	{
+		*first = (*first)->link;
+		free(temp);
+		return;
+	}
+	while (temp != NULL && temp->data != key)
+    {
+        prev = temp;
+        temp = temp->link;
+    }
+    if(temp == NULL)
+    	printf("link not present in node");
+    prev->link = temp->link;
+    free(temp);
+}
+
+void display(sll_node* first)
+{
+	sll_node* cur = first;
 	if(cur == NULL)
 		printf("List Empty\n");
 	else
 	{
-		printf("link: %p\t data: %d\n", cur->link, cur->data);
-		cur = cur->link;
+    	while(cur != NULL)
+    	{
+    		printf("link: %p\t data: %d\n", cur->link, cur->data);
+    		cur = cur->link;
+    		//printf("link: %p\t data: %d\n", cur->link, cur->data);
+    	}
+    	//printf("link: %p\t data: %d\n", cur->link, cur->data);
 	}
 }
 
@@ -87,8 +114,13 @@ int insertItem()
 int main()
 {
 	int sel = 0, key = 0;
-	sll_node *first = NULL;
+	sll_node* first = NULL;
 	//insertLeft(first, item);
+	insertLeft(&first, 5);
+  	insertLeft(&first, 4);
+  	insertLeft(&first, 3);
+	//printf("*first = %p , %d, %p\n", first, first->data, first->link);
+ 	display(first);
 	while(sel != 6)
 	{
 		//printf("*first = %p , %d, %p\n", first, first->data, first->link);
@@ -98,7 +130,7 @@ int main()
 		switch(sel)
 		{
 			case 1:
-				first = insertLeft(first, insertItem());
+				insertLeft(&first, insertItem());
 				printf("*first = %p ", first);
 				break;
 			case 2:
@@ -108,6 +140,11 @@ int main()
 				break;
 			case 3:
 				insertEnd(first, insertItem());
+				break;
+			case 4:
+				printf("Enter which element to delete\n");
+				scanf("%d", &key);
+				delete(&first, key);
 				break;
 			case 5:
 				display(first);
