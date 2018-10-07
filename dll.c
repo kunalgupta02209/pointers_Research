@@ -65,14 +65,19 @@ dll_node* findNode(dll_node *first, int key)
 	}
 }
 
-void insertEnd(dll_node *first, int item)
+void insertEnd(dll_node **first, int item)
 {
 	dll_node *cur, *temp;
 	temp = (dll_node *)malloc(sizeof(dll_node*));
-	cur = first;
+	cur = *first;
 	temp->data = item;
 	temp->nlink = NULL;
 	temp->plink = NULL;
+	if(*first == NULL)
+	{
+		*first = temp;
+		return;
+	}
 	while(cur->nlink != NULL)
 		cur = cur->nlink;
 	cur->nlink = temp;
@@ -171,7 +176,7 @@ int main()
 				//insertKey(first, insertItem(), key);
 				break;
 			case 3:
-				insertEnd(first, insertItem());
+				insertEnd(&first, insertItem());
 				break;
 			case 4:
 				printf("Enter which element to delete\n");
