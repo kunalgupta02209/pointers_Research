@@ -48,7 +48,10 @@ dll_node* findNode(dll_node *first, int key)
 {
 	dll_node *cur = first;
 	if(first == NULL)
+	{
 		printf("List Empty");
+		return NULL;
+	}
 	else
 	{
 		while(cur != NULL && cur->data != key)
@@ -79,7 +82,34 @@ void insertEnd(dll_node *first, int item)
 
 void deleteNode(dll_node **cur, int item)
 {
-
+	dll_node *prev, *next, *temp;
+	temp = *cur;
+	if((*cur)->plink == NULL && (*cur)->nlink == NULL)
+	{
+		*cur = NULL;
+		free(temp);
+	}
+	else if((*cur)->plink == NULL)
+	{
+		next = (*cur)->nlink;
+		next->plink = NULL;
+		*cur = (*cur)->nlink;
+		free(temp);
+	}
+	else if((*cur)->nlink == NULL)
+	{
+		prev = (*cur)->plink;
+		prev->nlink = NULL;
+		free(temp);
+	}
+	else
+	{
+		next = (*cur)->nlink;
+		prev = (*cur)->plink;
+		next->plink = prev;
+		prev->nlink = next;
+		free(temp);
+	}
 }
 
 void display(dll_node* first)
@@ -113,10 +143,10 @@ int main()
 	dll_node *first = NULL, *temp = NULL;
 	//insertFront(first, item);
 	//printf("here\n");
-	insertFront(&first, 5);
+	/*insertFront(&first, 5);
   	insertFront(&first, 4);
   	insertFront(&first, 3);
-  	insertFront(&first, 2);
+  	insertFront(&first, 2);*/
   	insertFront(&first, 1);
 	//printf("*first = %p , %d, %p\n", first, first->data, first->link);
  	display(first);
@@ -141,12 +171,19 @@ int main()
 				//insertKey(first, insertItem(), key);
 				break;
 			case 3:
-				//insertEnd(first, insertItem());
+				insertEnd(first, insertItem());
 				break;
 			case 4:
 				printf("Enter which element to delete\n");
 				scanf("%d", &key);
-				//delete(&first, key);
+				temp = findNode(first, key);
+				if(temp != NULL)
+				{
+					if(temp == first)
+						deleteNode(&first, key);
+					else
+						deleteNode(&temp, key);
+				}
 				break;
 			case 5:
 				display(first);
