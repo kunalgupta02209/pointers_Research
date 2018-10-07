@@ -6,14 +6,17 @@ typedef struct node
 	int data;
 }sll_node;
 
-void insertLeft(sll_node **first, int item)
+void insertFront(sll_node **first, int item)
 {
 	sll_node *temp = (sll_node *)malloc(sizeof(sll_node));
 	//printf("*first = %p\n", first);
 	temp->data = item;
 	temp->link = NULL;
-	if(first == NULL)
+	if(*first == NULL)
+	{
+		//printf("here\n");
 		*first = temp;
+	}
 	else
 	{
 		temp->link = *first;
@@ -23,13 +26,18 @@ void insertLeft(sll_node **first, int item)
 	//printf("*temp = %p , %d, %p\n", temp, temp->data, temp->link);
 }
 
-void insertEnd(sll_node *first, int item)
+void insertEnd(sll_node **first, int item)
 {
 	sll_node *cur, *temp;
 	temp = (sll_node *)malloc(sizeof(sll_node*));
-	cur = first;
+	cur = *first;
 	temp->data = item;
 	temp->link = NULL;
+	if(cur == NULL)
+	{
+		*first = temp;
+		return;
+	}
 	while(cur->link != NULL)
 		cur = cur->link;
 	cur->link = temp;
@@ -58,7 +66,7 @@ void delete(sll_node **first, int key)
 {
 	sll_node *prev, *cur;
 	cur = *first;
-	printf("%d\n", (*first)->data);
+	//printf("%d\n", (*first)->data);
 	if(*first != NULL && (*first)->data == key)
 	{
 		*first = (*first)->link;
@@ -109,22 +117,22 @@ int main()
 {
 	int sel = 0, key = 0;
 	sll_node* first = NULL;
-	//insertLeft(first, item);
-	insertLeft(&first, 5);
-  	insertLeft(&first, 4);
-  	insertLeft(&first, 3);
+	//insertFront(first, item);
+	insertFront(&first, 5);
+  	insertFront(&first, 4);
+  	insertEnd(&first, 3);
 	//printf("*first = %p , %d, %p\n", first, first->data, first->link);
  	display(first);
 	while(sel != 6)
 	{
 		//printf("*first = %p , %d, %p\n", first, first->data, first->link);
 		printf("Select a linked list operation to perform\n");
-		printf("1. InsertLeft\n2. Insert Pos\n3. Insert End\n4. DeletePos\n5. Display\n6. Exit\n");
+		printf("1. insert Front\n2. Insert After Key\n3. Insert End\n4. DeletePos\n5. Display\n6. Exit\n");
 		scanf("%d",&sel);
 		switch(sel)
 		{
 			case 1:
-				insertLeft(&first, insertItem());
+				insertFront(&first, insertItem());
 				//printf("*first = %p ", first);
 				break;
 			case 2:
@@ -133,7 +141,7 @@ int main()
 				insertKey(first, insertItem(), key);
 				break;
 			case 3:
-				insertEnd(first, insertItem());
+				insertEnd(&first, insertItem());
 				break;
 			case 4:
 				printf("Enter which element to delete\n");
